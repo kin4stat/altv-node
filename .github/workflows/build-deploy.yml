@@ -12,7 +12,7 @@ jobs:
     runs-on: windows-2022
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           lfs: true
@@ -34,7 +34,7 @@ jobs:
           copy out\Release\libnode.dll dist
           copy out\Release\node.pdb dist
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: node-windows-release
           path: ./dist/
@@ -44,7 +44,7 @@ jobs:
     runs-on: windows-2022
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           lfs: true
@@ -66,7 +66,7 @@ jobs:
           copy out\Debug\libnode.dll dist
           copy out\Debug\node.pdb dist
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: node-windows-debug
           path: ./dist/
@@ -76,7 +76,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           lfs: true
@@ -98,7 +98,7 @@ jobs:
           mkdir dist
           cp ./out/Release/libnode.so dist/libnode.so
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: node-linux-release
           path: ./dist/
@@ -112,19 +112,19 @@ jobs:
       - build-linux-release
     steps:
       - name: Download windows release artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: node-windows-release
           path: dist-windows-release
 
       - name: Download windows debug artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: node-windows-debug
           path: dist-windows-debug
 
       - name: Download linux release artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: node-linux-release
           path: dist-linux-release
