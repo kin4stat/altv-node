@@ -93,15 +93,22 @@ jobs:
 
       - name: Build
         run: |
-          cd alt-build && bash alt-release.sh
+          cd alt-build && bash alt-debug.sh
           cd ..
-          mkdir dist
-          cp ./out/Release/libnode.so dist/libnode.so
+          mkdir dist-release
+          cp ./out/Release/libnode.so dist-release/libnode.so
+          mkdir dist-debug
+          cp ./out/Debug/libnode.so dist-debug/libnode.so
 
       - uses: actions/upload-artifact@v4
         with:
           name: node-linux-release
-          path: ./dist/
+          path: ./dist-release/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: node-linux-debug
+          path: ./dist-debug/
 
   deploy:
     name: Deploy
@@ -129,11 +136,18 @@ jobs:
           name: node-linux-release
           path: dist-linux-release
 
+      - name: Download linux release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: node-linux-debug
+          path: dist-linux-debug
+
       - name: Zip artifacts
         run: |
           zip -r -j node-windows-release dist-windows-release
           zip -r -j node-windows-debug dist-windows-debug
           zip -r -j node-linux-release dist-linux-release
+          zip -r -j node-linux-debug dist-linux-debug
 
       - name: Create Release
         id: create_release
@@ -172,6 +186,16 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./node-linux-release.zip
           asset_name: node-linux-release.zip
+          asset_content_type: application/zip
+
+      - name: Upload linux debug artifacts
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./node-linux-debug.zip
+          asset_name: node-linux-debug.zip
           asset_content_type: application/zip
 
       - name: Extract version
